@@ -2,6 +2,7 @@ import numpy as np
 from scipy import sparse
 
 from solvers.richardson import simple_iteration_solver
+from solvers.richardson_L_precond import simple_iteration_solver_L_precond
 from solvers.jacobi import jacobi_solver
 from solvers.sor import sor_solver
 from solvers.ssor import ssor_solver
@@ -13,7 +14,7 @@ from problems.cubic_spline import cubic_spline
 
 # Basic test. Generate matrix of fixed size & check converganse and error with correct solution 
 
-n = 10000
+n = 1000
 # A, b = generate_spd_matrix(n)
 # b = np.random.rand(n)
 A, b = cubic_spline(n + 1)
@@ -32,6 +33,7 @@ def print_result(name, sol, iters, res, correct_sol):
 
 
 print_result("Richardson", *simple_iteration_solver(A, b, x0), correct_sol)
+print_result("Richardson Precond", *simple_iteration_solver_L_precond(A, b, x0), correct_sol)
 print_result("Jacobi",     *jacobi_solver(A, b, x0), correct_sol)
 print_result("SOR",        *sor_solver(A, b, x0), correct_sol)
 print_result("SSOR",       *ssor_solver(A, b, x0), correct_sol)
