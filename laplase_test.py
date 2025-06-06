@@ -13,7 +13,7 @@ from problems.FEMSystem import laplase_problem_generator
 
 # Test on system for Laplase equation 
 
-n = 1000
+n = 200
 # A, b = generate_spd_matrix(n)
 # b = np.random.rand(n)
 A, b = laplase_problem_generator(n + 1)
