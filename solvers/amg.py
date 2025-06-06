@@ -112,22 +112,25 @@ def two_level_amg(
     n = A.shape[0]
     x = x0.copy()
     
+    # Определение сильных и слабых связей в матрице (вынесено за цикл!)
+    C_var, F_var = ruge_stuben_variables(A, theta)
+    
+    # Построение интерполирующей матрицы
+    P = build_interpolator(A, C_var, F_var)
+    
+    # Экстраполирующий оператор
+    R = P.T
+    
+    # Определение грубой системы
+    A_c = R @ A @ P
+    
     for i in range(max_iter):
         # Сглаживание методом якоби для подавление высокочастотных ошибок
         x, _, _ = jacobi_solver(A, b, x, maxiter=smooth_iter)
         
         r = b - A.dot(x)
-        # Определение сильных и слабых связей в матрице (вынести за цикл?)
-        C_var, F_var = ruge_stuben_variables(A, theta)
         
-        # Построение интерполирующей матрицы
-        P = build_interpolator(A, C_var, F_var)
-        
-        # Экстраполирующий оператор
-        R = P.T
-        
-        # Определение грубой системы
-        A_c = R @ A @ P
+        # грубая невязка
         r_c = R @ r
         
         e_c = sparse.linalg.spsolve(A_c, r_c)

@@ -8,15 +8,15 @@ from solvers.ssor import ssor_solver
 from solvers.cg import c_gradient
 from solvers.amg import two_level_amg
 
-from problems.cubic_spline import cubic_spline
+from problems.FEMSystem import laplase_problem_generator
 
 
-# Basic test. Generate matrix of fixed size & check converganse and error with correct solution 
+# Test on system for Laplase equation 
 
-n = 10000
+n = 1000
 # A, b = generate_spd_matrix(n)
 # b = np.random.rand(n)
-A, b = cubic_spline(n + 1)
+A, b = laplase_problem_generator(n + 1)
 x0 = np.random.rand(A.shape[0])
 
 # Точное решение
@@ -30,8 +30,9 @@ def print_result(name, sol, iters, res, correct_sol):
     else:
         print(f"[{name:<10}] Итераций: {iters:4d}, ||x - x*|| = {diff_norm:.2e}, остаток = {res:.2e}")
 
+# Turned off for laplace problem
+# print_result("Richardson", *simple_iteration_solver(A, b, x0), correct_sol)
 
-print_result("Richardson", *simple_iteration_solver(A, b, x0), correct_sol)
 print_result("Jacobi",     *jacobi_solver(A, b, x0), correct_sol)
 print_result("SOR",        *sor_solver(A, b, x0), correct_sol)
 print_result("SSOR",       *ssor_solver(A, b, x0), correct_sol)

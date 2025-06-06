@@ -12,6 +12,7 @@ def simple_iteration_solver(
     tol: float = 1e-6,           # absolute tolerance
     maxiter: int = 10000  # maximal iteration count
 ):
+    # Not optimal
     lambda_max = eigsh(A, k=1, which='LA', return_eigenvectors=False)[0]
     lambda_min = eigsh(A, k=1, which='SA', return_eigenvectors=False)[0]
     tau = 2.0 / (lambda_min + lambda_max)

@@ -21,8 +21,7 @@ def sor_solver(
             row_last  = A.indptr[i + 1]
             Aidx = A.indices[row_first:row_last]
             Avals = A.data[row_first:row_last]
-            
-            
+        
             a_ii = 0.0
             sigma = 0.0
 
