@@ -1,29 +1,31 @@
 import numpy as np
 from scipy import sparse
 
+from scipy.sparse.linalg import eigsh
+
+
 def simple_iteration_solver(
     A: sparse.spmatrix, 
     b: np.ndarray,
     x0: np.ndarray,       # initial solution vector
-    omega: float,         # regulirization param
-    tol: float,           # absolute tolerance
+    omega: float = 1,         # regulirization param
+    tol: float = 1e-6,           # absolute tolerance
     maxiter: int = 10000  # maximal iteration count
 ):
-    n = b.shape[0] # count of unknown
-    
+    lambda_max = eigsh(A, k=1, which='LA', return_eigenvectors=False)[0]
+    lambda_min = eigsh(A, k=1, which='SA', return_eigenvectors=False)[0]
+    tau = 2.0 / (lambda_min + lambda_max)
+        
     x = x0.astype(float).copy()
     
-    for iteration in range(1, maxiter):
-        # current residual 
-        Ax = A.dot(x)
-        r = Ax - b
-        
+    for iteration in range(maxiter):
+        r = A.dot(x) - b
         res_norm = np.linalg.norm(r)
-        
-        if(res_norm < tol):
-            return x, iteration - 1, res_norm
-        
-        x = x + omega * r
+
+        if res_norm < tol:
+            return x, iteration, res_norm
+
+        x = x - tau * r
     
     # if method does not converge return last solution approxiamtion    
     res_norm = np.linalg.norm(b - A.dot(x))

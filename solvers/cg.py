@@ -7,35 +7,33 @@ def c_gradient(
     x0: np.ndarray,
     tol: float = 1e-6 
 ):
-    n = b.shape[0] # unknowns count
+    n = A.shape[0]
     x = x0.copy()
-    
-    # initial residual
-    r = b - A.dot(x)
-    # initial p0 vector = r0
+    r = b - A @ x
     p = r.copy()
-    
-    residual_skalar_initial = r.dot(r)
-    
-    for i in range(1, n):
-        
-        if r < tol:
-            return x, i, r
-        
-        Ap = A.dot(p)
-        
-        alpha = residual_skalar_initial / Ap.dot(p)
-        
+
+    rs_old = r @ r
+
+    for i in range(n - 1):
+        # Проверка сходимости
+        res_norm = np.linalg.norm(r)
+        if res_norm < tol:
+            return x, i, res_norm
+
+        Ap = A @ p
+        alpha = rs_old / (p @ Ap)
+
         x = x + alpha * p
-        
-        r_new = r - alpha * Ap
-        
-        beta = (r_new.dot(r_new)) / (r.dot(r))
-        
-        r = r_new
-        
+        r = r - alpha * Ap
+
+        rs_new = r @ r
+        beta = rs_new / rs_old
+
         p = r + beta * p
+        rs_old = rs_new
+        
+        # print(res_norm)
         
     # if method does not converge
-    return x, -1, r
+    return x, -1, np.linalg.norm(r)
     

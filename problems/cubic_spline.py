@@ -2,8 +2,16 @@ import numpy as np
 from scipy.sparse import diags
 
 
-def cubic_spline(x : np.array, y: np.array):
-    assert(len(x) != len(y), "Input data sizes are different")
+# Generate matrix for cubic spline second derivatives
+# Method get only matrix size. Spline approximate sin(x) function
+ 
+def cubic_spline(n, x = (0, 1), seed=None):
+    
+    if seed is None:
+        np.random.seed(seed)
+        
+    x = np.linspace(*x, n + 1)
+    y = np.sin(x) + 0.1 * np.random.randn(n + 1)  # добавим шум
     
     n = len(x) - 1
     
@@ -16,17 +24,13 @@ def cubic_spline(x : np.array, y: np.array):
     ]
     
     # Create sparce matrix
-    A = diags(diagonals, [-1, 0, 1], shape=(n+1, n+1)).to_csr()
-    
-    
-    # set BC
-    A[0, 0] = 0
-    A[n, n] = 0
+    A = diags(diagonals, [-1, 0, 1], shape=(n-1, n-1)).tocsr()
     
     # RHS
-    b = np.zeros(n + 1)
+    b = np.zeros(n - 1)
     for i in range(1, n):
-        b[i] = 6 * ((y[i+1] - y[i]) / (x[i + 1] - x[i]) - (y[i] - y[i-1])/(x[i] - x[i-1])) 
+        b[i - 1] = 6 * ((y[i+1] - y[i]) / (x[i + 1] - x[i]) - (y[i] - y[i-1])/(x[i] - x[i-1])) 
+        
         
     return A, b 
     

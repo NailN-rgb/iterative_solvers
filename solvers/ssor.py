@@ -5,8 +5,8 @@ def ssor_solver(
     A: sparse.spmatrix, 
     b: np.ndarray,
     x0: np.ndarray,       # initial solution vector
-    omega: float,         # regulirization param
-    tol: float,           # absolute tolerance
+    omega: float = 1,         # regulirization param
+    tol: float = 1e-6,           # absolute tolerance
     maxiter: int = 10000  # maximal iteration count
 ):
     n = b.shape[0] # count of unknown
@@ -15,22 +15,13 @@ def ssor_solver(
     x_half = np.zeros(n)
     
     for iteration in range(1, maxiter):
-        # current residual 
-        Ax = A.dot(x)
-        r = Ax - b
-        
         x_old = x.copy()
-        
-        res_norm = np.linalg.norm(r)
-        
-        if(res_norm < tol):
-            return x, iteration - 1, res_norm
         
         # staight correction
         for i in range(n):
             row_first = A.indptr[i]
             row_last  = A.indptr[i + 1]
-            Aidx = A.indeces[row_first:row_last]
+            Aidx = A.indices[row_first:row_last]
             Avals = A.data[row_first:row_last]
             
             
@@ -52,7 +43,7 @@ def ssor_solver(
         for i in range(n):
             row_first = A.indptr[i]
             row_last  = A.indptr[i + 1]
-            Aidx = A.indeces[row_first:row_last]
+            Aidx = A.indices[row_first:row_last]
             Avals = A.data[row_first:row_last]
             
             
@@ -69,6 +60,14 @@ def ssor_solver(
 
             x[i] = (1 - omega) * x_half[i] + (omega / a_ii) * (b[i] - sigma)
             
+        # current residual 
+        Ax = A.dot(x)
+        r = Ax - b
+        
+        res_norm = np.linalg.norm(r)
+        
+        if(res_norm < tol):
+            return x, iteration - 1, res_norm
             
             
     # if method does not converge return last solution approxiamtion    
