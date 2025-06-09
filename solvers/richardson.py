@@ -13,10 +13,6 @@ def simple_iteration_solver(
     maxiter: int = 10000  # maximal iteration count
 ):
     # Not optimal
-    lambda_max = eigsh(A, k=1, which='LA', return_eigenvectors=False)[0]
-    lambda_min = eigsh(A, k=1, which='SA', return_eigenvectors=False)[0]
-    tau = 2.0 / (lambda_min + lambda_max)
-        
     x = x0.astype(float).copy()
     
     for iteration in range(maxiter):
@@ -26,7 +22,7 @@ def simple_iteration_solver(
         if res_norm < tol:
             return x, iteration, res_norm
 
-        x = x - tau * r
+        x = x - omega * r
     
     # if method does not converge return last solution approxiamtion    
     res_norm = np.linalg.norm(b - A.dot(x))

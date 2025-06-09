@@ -14,7 +14,7 @@ from problems.FEMSystem import laplase_problem_generator
 
 # Test on system for Laplase equation 
 
-n = 200
+n = 1000
 # A, b = generate_spd_matrix(n)
 # b = np.random.rand(n)
 A, b = laplase_problem_generator(n + 1)
@@ -32,13 +32,13 @@ def print_result(name, sol, iters, res, correct_sol):
         print(f"[{name:<10}] Итераций: {iters:4d}, ||x - x*|| = {diff_norm:.2e}, остаток = {res:.2e}")
 
 # Turned off for laplace problem
-print_result("Richardson", *simple_iteration_solver(A, b, x0), correct_sol)
-print_result("Richardson Precond", *simple_iteration_solver_L_precond(A, b, x0), correct_sol)
+# print_result("Richardson", *simple_iteration_solver(A, b, x0), correct_sol)
+# print_result("Richardson Precond", *simple_iteration_solver_L_precond(A, b, x0), correct_sol)
 
-print_result("Jacobi",     *jacobi_solver(A, b, x0), correct_sol)
-print_result("SOR",        *sor_solver(A, b, x0), correct_sol)
-print_result("SSOR",       *ssor_solver(A, b, x0), correct_sol)
-print_result("CG",         *c_gradient(A, b, x0), correct_sol)
+# print_result("Jacobi",     *jacobi_solver(A, b, x0), correct_sol)
+# print_result("SOR",        *sor_solver(A, b, x0), correct_sol)
+# print_result("SSOR",       *ssor_solver(A, b, x0), correct_sol)
+# print_result("CG",         *c_gradient(A, b, x0), correct_sol)
 print_result("AMG",        *two_level_amg(A, b, x0, 2, 0.25), correct_sol)
 
 print("\nПрограмма завершена.")

@@ -106,7 +106,7 @@ def two_level_amg(
     x0: np.ndarray,     # initial solution approximation
     smooth_iter: int,   # count of jacobi iterations for smoothing
     theta: float,       # param for Ruge-Steben algorithm
-    maxiter: int = 10000,      # maximum iteration count
+    maxiter: int = 10000,     # maximum iteration count
     tol: float = 1e-6         # minimal residual value
 ):
     n = A.shape[0]

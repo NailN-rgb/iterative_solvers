@@ -7,6 +7,7 @@ from solvers.jacobi import jacobi_solver
 from solvers.sor import sor_solver
 from solvers.ssor import ssor_solver
 from solvers.cg import c_gradient
+from solvers.pcg import pcg
 from solvers.amg import two_level_amg
 
 from problems.cubic_spline import cubic_spline
@@ -14,7 +15,7 @@ from problems.cubic_spline import cubic_spline
 
 # Basic test. Generate matrix of fixed size & check converganse and error with correct solution 
 
-n = 1000
+n = 100
 # A, b = generate_spd_matrix(n)
 # b = np.random.rand(n)
 A, b = cubic_spline(n + 1)
@@ -38,6 +39,7 @@ print_result("Jacobi",     *jacobi_solver(A, b, x0), correct_sol)
 print_result("SOR",        *sor_solver(A, b, x0), correct_sol)
 print_result("SSOR",       *ssor_solver(A, b, x0), correct_sol)
 print_result("CG",         *c_gradient(A, b, x0), correct_sol)
+print_result("PCG",        *pcg(A, b, x0), correct_sol)
 print_result("AMG",        *two_level_amg(A, b, x0, 2, 0.25), correct_sol)
 
 print("\nПрограмма завершена.")

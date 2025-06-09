@@ -5,13 +5,14 @@ def jacobi_solver(
     A: sparse.spmatrix, 
     b: np.ndarray,
     x0: np.ndarray,       # initial solution vector
+    omega: float = 1,
     tol: float = 1e-6,           # absolute tolerance
     maxiter: int = 10000  # maximal iteration count
 ):
     n = b.shape[0]
     x = x0.astype(float).copy()
 
-    D_inv = 1.0 / A.diagonal()
+    D_inv = 1.0 / (omega * A.diagonal())
     
     # Предварительно A - D (L + U)
     R = A.copy()

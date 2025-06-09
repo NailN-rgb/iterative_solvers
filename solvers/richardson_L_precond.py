@@ -12,11 +12,6 @@ def simple_iteration_solver_L_precond(
     tol: float = 1e-6,           # absolute tolerance
     maxiter: int = 10000  # maximal iteration count
 ):
-    # Not optimal
-    lambda_max = eigsh(A, k=1, which='LA', return_eigenvectors=False)[0]
-    lambda_min = eigsh(A, k=1, which='SA', return_eigenvectors=False)[0]
-    tau = 2.0 / (lambda_min + lambda_max)
-    
     M = np.tril(A.toarray())
         
     x = x0.astype(float).copy()
@@ -29,7 +24,7 @@ def simple_iteration_solver_L_precond(
         if res_norm < tol:
             return x, iteration, res_norm
 
-        x = x - tau * z
+        x = x - omega * z
     
     # if method does not converge return last solution approxiamtion    
     res_norm = np.linalg.norm(b - A.dot(x))

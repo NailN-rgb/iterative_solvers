@@ -7,6 +7,7 @@ from solvers.jacobi import jacobi_solver
 from solvers.sor import sor_solver
 from solvers.ssor import ssor_solver
 from solvers.cg import c_gradient
+from solvers.pcg import pcg
 from solvers.amg import two_level_amg
 
 from problems.cubic_spline import cubic_spline
@@ -37,6 +38,7 @@ measure_time("Jacobi",     jacobi_solver,          A, b, x0)
 measure_time("SOR",        sor_solver,             A, b, x0)
 measure_time("SSOR",       ssor_solver,            A, b, x0)
 measure_time("CG",         c_gradient,             A, b, x0)
+measure_time("PCG",        pcg,                    A, b, x0)
 measure_time("AMG",        two_level_amg,          A, b, x0, 2, 0.25)
 
 print("\nТестирование завершено.")
